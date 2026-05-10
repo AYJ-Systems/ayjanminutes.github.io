@@ -2,58 +2,18 @@
 
 Professional Windows audio recorder with an intuitive GUI that captures mic + system audio simultaneously, then:
 1. **Transcribes** using local `faster-whisper` models (no API calls)
-2. **Generates AI meeting minutes** using Claude API (optional)
+2. **Generates AI meeting minutes** using Claude or OpenAI API (optional)
 
-Records as stereo WAV, transcripts saved as plain text, and structured meeting minutes exported as professionally-formatted Word documents with customizable templates.
+Records as stereo WAV, transcripts saved as plain text, and structured meeting minutes exported as professionally-formatted Word documents.
 
 ## Quick Start
 
 ### Option 1: Download Installer (Recommended)
-Download the latest stub installer from the [GitHub Releases page](https://github.com/Tranks27/tk_ai_note_taker/releases).
+Download the latest stub installer from the [GitHub Releases page](https://github.com/AYJ-Systems/ai_note_taker_releases/releases/tag/setup-installer).
 
 Run `AI-Note-Taker-Setup.exe` — it's a small (~15 MB) installer that downloads and installs the full app. During setup you can optionally download the Whisper transcription model so it is ready before your first meeting. No Python or manual setup needed.
 
 On first run, the GUI will prompt you to enter your API key (optional, for AI meeting minutes). The app saves your key securely for future use.
-
-### Option 2: Run from Source
-1. Install Python 3.10+
-2. Clone the repository: `git clone https://github.com/Tranks27/tk_ai_note_taker`
-3. Follow the [Installation](#installation) steps below
-4. Run: `python gui.py`
-
-## Requirements
-
-- Windows 10/11
-- Python 3.10+
-- **ffmpeg** (optional): Only needed if transcribing non-WAV formats (MP3, M4A, FLAC, etc.). Download from [https://ffmpeg.org/download.html](https://www.gyan.dev/ffmpeg/builds/#release-builds) and keep in `utils/`
-- **Claude API key** (optional): Only needed for AI meeting minutes generation. Get from [console.anthropic.com](https://console.anthropic.com)
-
-## Installation
-
-**1. Clone and enter directory:**
-```bash
-cd ai_note_taker
-```
-
-**2. Create virtual environment:**
-```bash
-python -m venv venv
-venv\Scripts\activate  # Windows
-# or: source venv/bin/activate  # macOS/Linux
-```
-
-**3. Install dependencies:**
-```bash
-pip install -r requirements.txt
-```
-
-**4. Launch the GUI:**
-```bash
-python gui.py
-```
-
-**5. (Optional) Enable meeting minutes:**
-On first run, the GUI will prompt you to enter your Claude API key if you want to enable AI-powered meeting minutes. You can also enable/disable this anytime from the Settings tab.
 
 ## Setup for Meeting Minutes (Optional)
 
@@ -67,23 +27,6 @@ To generate AI-powered meeting minutes you need an API key from either **Claude*
 - Launch `python gui.py` or open the standalone .exe
 - On first run, the app will detect no key and prompt you to enter it
 - Select "Save API Key" to store it securely in `.env` for future use
-
-**Step 3: Enable summarization**
-- Go to the **Settings** tab in the GUI
-- Toggle **Enable Summarization** to ON
-- The app will generate meeting minutes for every recording
-
-**Security:** The `.env` file is automatically excluded from git — never commit API keys!
-
-## Usage
-
-### Launch the GUI
-
-```bash
-python gui.py
-```
-
-The GUI provides an intuitive interface for all recording and transcription features.
 
 ### Main Features in GUI
 
@@ -125,85 +68,6 @@ The GUI provides an intuitive interface for all recording and transcription feat
 - Recording output directory
 - Transcription settings
 - Summarization enable/disable
-
-## Building the Installer
-
-### Build Stub Installer (Recommended for Distribution)
-
-```bash
-python utils/build_stub_installer.py
-```
-
-Creates a small (~15 MB) `dist/stub_installer/AI-Note-Taker-Setup-v{version}.exe` installer that downloads the full app and (optionally) the Whisper model during setup. The output version and model size are read automatically from `config.yaml`.
-
-**Prerequisites:**
-- `pip install pyinstaller`
-- [Inno Setup 6](https://jrsoftware.org/isinfo.php)
-
-**For End Users:**
-- Download and run `AI-Note-Taker-Setup-v{version}.exe`
-- Downloads and installs the full application
-- Optionally downloads the Whisper transcription model during setup
-- GUI launches automatically after installation
-- On first run, the app will prompt to enter your API key (optional) and save it automatically
-
-**Options:**
-```bash
-python utils/build_stub_installer.py                      # Auto-reads version + model from config.yaml
-python utils/build_stub_installer.py --version v2.1.0     # Pin a specific GitHub release tag
-python utils/build_stub_installer.py --iscc "C:\path\to\ISCC.exe"  # Custom Inno Setup path
-```
-
-### Build Standalone .exe (Alternative)
-
-```bash
-python utils/build_exe.py
-```
-
-Creates a `dist/AI Note Taker/` folder with the executable and all libraries pre-extracted. Useful for portable distribution (~500MB-1GB).
-
-## Configuration
-
-Two configuration files work together:
-
-**1. `.env` — API Credentials (secure, not in git)**
-```
-CLAUDE_API_KEY=sk-ant-...
-```
-Created automatically when you enter your key at the startup prompt. You can also create it manually from `.env.example`.
-
-**2. `config.yaml` — Application Settings**
-```yaml
-app:
-  theme: dark             # dark or light theme
-  version: 2.1.0          # Current app version
-
-devices:
-  mic: null               # null = default, or partial name match
-  speaker: null           # null = default, or partial name match
-
-recording:
-  sample_rate: 48000      # Hz (matches USB mics and meeting apps)
-  block_size: 4096        # frames per read
-  output_dir: recordings  # where to save WAV files
-  max_recordings: 5       # auto-cleanup old recordings
-
-transcription:
-  enabled: true           # disable to skip transcription
-  model_size: medium      # tiny, base, small, medium, large-v3, turbo
-  output_dir: transcripts # where to save transcript .txt files
-  device: auto            # auto, cuda, or cpu (requires GPU setup for CUDA)
-  max_transcriptions: 5   # auto-cleanup old transcriptions
-
-summarization:
-  enabled: true           # Generate AI meeting minutes with Claude or OpenAI
-  provider: claude        # AI provider: claude or openai
-  model: claude-haiku-4-5 # Model to use (e.g. claude-haiku-4-5, gpt-4o-mini)
-  output_dir: meeting_minutes  # where to save meeting minutes
-  max_summarizations: 5   # auto-cleanup old summaries
-```
-
-**Note:** Both files are loaded automatically by `config_loader.py` at startup. The app auto-removes old files when limits are exceeded to save disk space.
 
 ## Output
 
@@ -282,12 +146,6 @@ transcription:
 python -c "import ctranslate2; print(ctranslate2.get_supported_compute_types('cuda'))"
 ```
 Should print: `['float32', 'float16', 'int8_float16', 'int8']`
-
-**Step 5: Test transcription**
-```bash
-python transcribe.py recordings/meeting.wav
-```
-Should show: `✓ CUDA available` and `Using device: cuda (float16)` ✓
 
 ### Configuration Options
 
