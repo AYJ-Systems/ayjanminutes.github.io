@@ -1,4 +1,4 @@
-# AI Note Taker
+# AYJ Note Taker
 
 Professional Windows audio recorder with an intuitive GUI that captures mic + system audio simultaneously, then:
 1. **Transcribes** using local `faster-whisper` models (no API calls)
