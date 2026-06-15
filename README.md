@@ -11,7 +11,7 @@ Records as stereo WAV, transcripts saved as plain text, and structured meeting m
 ## Quick Start
 
 ### Download Installer
-Download the latest installer from the [Website](https://ayj-systems.github.io/ayjanminutes/) or the [Releases page](https://github.com/Tranks27/tk_ayjan_minutes/releases).
+Download the latest installer from the [Website](https://ayj-systems.github.io/ayjanminutes/)
 
 Run `Ayjan-Minutes-Setup.exe` — it's a small (~15 MB) installer that downloads and installs the full app. During setup you can optionally download the Whisper transcription model so it is ready before your first meeting. No Python or manual setup needed.
 
@@ -125,7 +125,7 @@ By default, transcription runs on CPU. For NVIDIA GPU acceleration (3–5x faste
 
 **Step 1: Install CUDA Toolkit 12.x**
 
-Download from [NVIDIA's CUDA Toolkit page](https://developer.nvidia.com/cuda-downloads-archive):
+Download from [NVIDIA's CUDA Toolkit page](https://developer.nvidia.com/cuda-toolkit-archive):
 - Select **Windows**, **x86_64**, **12.x**, **exe (local)**
 - Run the installer with default settings
 
